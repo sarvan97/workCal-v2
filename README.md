@@ -25,6 +25,7 @@ npm install
 export NODE_ENV=development
 export JWT_SECRET='local-dev-secret'
 # Optional (defaults to ./data.sqlite)
+
 export DB_PATH='./data.sqlite'
 ```
 
