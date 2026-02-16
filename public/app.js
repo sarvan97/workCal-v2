@@ -64,13 +64,41 @@ async function refreshCalendar() {
 
   const data = await res.json();
   logs = data.logs;
-  renderCalendar(logs);
+  renderCalendar(logs, entryDateEl.value);
 }
 
-function renderCalendar(logsList) {
-  const eventMap = new Map();
+function classifyWorkoutType(log) {
+  const eventText = (log.parsed?.events || [])
+    .map((event) => `${event.title || ''} ${event.sourceText || ''}`)
+    .join(' ');
+  const text = `${eventText} ${log.raw_text || ''}`.toLowerCase();
+
+  if (/strength|lift|squat|deadlift|bench|press|row/.test(text)) {
+    return { key: 'strength', badge: 'S' };
+  }
+  if (/cardio|run|jog|hiit|interval/.test(text)) {
+    return { key: 'cardio', badge: 'C' };
+  }
+  if (/cycle|bike|cycling|biking|spin/.test(text)) {
+    return { key: 'cycle', badge: 'B' };
+  }
+  if (/mobility|yoga|stretch|recovery|foam\s*roll/.test(text)) {
+    return { key: 'mobility', badge: 'M' };
+  }
+  if (/walk|hike|walking|hiking/.test(text)) {
+    return { key: 'walk', badge: 'W' };
+  }
+  if (/workout|training|exercise|gym/.test(text)) {
+    return { key: 'workout', badge: 'W' };
+  }
+
+  return { key: 'event', badge: '•' };
+}
+
+function renderCalendar(logsList, selectedDate) {
+  const logMap = new Map();
   logsList.forEach((log) => {
-    eventMap.set(log.entry_date, log.parsed.events || []);
+    logMap.set(log.entry_date, log);
   });
 
   const today = new Date();
@@ -80,20 +108,56 @@ function renderCalendar(logsList) {
 
   calendarEl.innerHTML = '';
   for (let day = 1; day <= daysInMonth; day += 1) {
-    const date = new Date(y, m, day).toISOString().slice(0, 10);
-    const events = eventMap.get(date) || [];
+    const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const fullLog = logMap.get(date);
+    const eventCount = fullLog?.parsed?.events?.length || 0;
 
     const dayEl = document.createElement('div');
     dayEl.className = 'day';
-    dayEl.innerHTML = `<strong>${day}</strong><div class="count">${events.length} event(s)</div>`;
+
+    if (selectedDate === date) {
+      dayEl.classList.add('selected');
+    }
+
+    dayEl.innerHTML = `
+      <div class="day-top">
+        <div class="day-num">${day}</div>
+        <div class="day-badges"></div>
+      </div>
+      <div class="day-sub"></div>
+    `;
+
+    const dayBadgesEl = dayEl.querySelector('.day-badges');
+    const daySubEl = dayEl.querySelector('.day-sub');
+
+    if (fullLog) {
+      dayEl.classList.add('has-log');
+      const workoutType = classifyWorkoutType(fullLog);
+      dayEl.classList.add(`type-${workoutType.key}`);
+
+      const badgeEl = document.createElement('div');
+      badgeEl.className = 'badge';
+      badgeEl.textContent = workoutType.badge;
+      dayBadgesEl.appendChild(badgeEl);
+
+      daySubEl.textContent = eventCount === 1 ? '1 item' : `${eventCount} items`;
+    } else {
+      daySubEl.textContent = '';
+    }
+
     dayEl.addEventListener('click', () => {
-      const fullLog = logs.find((l) => l.entry_date === date);
+      entryDateEl.value = date;
       if (fullLog) {
-        entryDateEl.value = date;
         logTextEl.value = fullLog.raw_text;
-        statusEl.textContent = fullLog.parsed.summary;
+        statusEl.textContent = fullLog.parsed?.summary || '';
+      } else {
+        logTextEl.value = '';
+        statusEl.textContent = '';
       }
+
+      renderCalendar(logs, date);
     });
+
     calendarEl.appendChild(dayEl);
   }
 }
