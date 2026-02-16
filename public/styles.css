@@ -1,0 +1,108 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f2f5fb;
+  color: #1f2a44;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+header p {
+  color: #4d5c7d;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(28, 38, 66, 0.08);
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tabs button,
+button {
+  border: none;
+  background: #3d66f5;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: #1f4ce0;
+}
+
+button.outline {
+  background: transparent;
+  color: #1f4ce0;
+  border: 1px solid #1f4ce0;
+}
+
+input,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 8px 0 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cfd6ea;
+}
+
+.hidden {
+  display: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.between {
+  justify-content: space-between;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(90px, 1fr));
+  gap: 8px;
+}
+
+.day {
+  background: #f8f9ff;
+  border: 1px solid #dce2f7;
+  border-radius: 8px;
+  min-height: 70px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.day .count {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #345;
+}
+
+#status {
+  min-height: 18px;
+  color: #1f4ce0;
+}
