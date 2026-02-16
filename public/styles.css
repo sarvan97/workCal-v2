@@ -83,158 +83,26 @@ textarea {
 
 #calendar {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(7, minmax(90px, 1fr));
+  gap: 8px;
 }
 
 .day {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 92px;
-  padding: 10px;
-  border: 1px solid #d9e0ef;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #1f2a44;
-  cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-}
-
-.day:hover {
-  transform: translateY(-1px);
-  border-color: #c7d2ea;
-  box-shadow: 0 6px 16px rgba(31, 42, 68, 0.08);
-}
-
-.day.selected {
-  outline: 2px solid #3d66f5;
-  outline-offset: 1px;
-}
-
-.day-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.day-num {
+  background: #f8f9ff;
+  border: 1px solid #dce2f7;
+  border-radius: 8px;
+  min-height: 70px;
+  padding: 8px;
   font-size: 13px;
-  font-weight: 600;
-  color: #2e3d62;
 }
 
-.day-badges {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-left: auto;
-}
-
-.badge {
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  line-height: 1;
-  font-weight: 700;
-  color: #fff;
-  background: #4b5563;
-}
-
-.day-sub {
-  margin-top: auto;
+.day .count {
+  margin-top: 8px;
   font-size: 12px;
-  color: #7a869f;
-}
-
-.day.type-strength {
-  background: #eefbf2;
-  border-color: #cdeed8;
-}
-
-.day.type-strength .badge {
-  background: #1f9d55;
-}
-
-.day.type-cardio {
-  background: #fff1f1;
-  border-color: #f4d0d0;
-}
-
-.day.type-cardio .badge {
-  background: #dc2626;
-}
-
-.day.type-cycle {
-  background: #eff6ff;
-  border-color: #cfe0ff;
-}
-
-.day.type-cycle .badge {
-  background: #2563eb;
-}
-
-.day.type-mobility {
-  background: #f6f0ff;
-  border-color: #e2d4ff;
-}
-
-.day.type-mobility .badge {
-  background: #7c3aed;
-}
-
-.day.type-walk {
-  background: #fff7ed;
-  border-color: #ffe3c2;
-}
-
-.day.type-walk .badge {
-  background: #ea580c;
-}
-
-.day.type-workout {
-  background: #f5f6f8;
-  border-color: #dee1e7;
-}
-
-.day.type-workout .badge {
-  background: #6b7280;
-}
-
-.day.type-event {
-  background: #f8fafc;
-  border-color: #e2e8f0;
-}
-
-.day.type-event .badge {
-  background: #1f2937;
+  color: #345;
 }
 
 #status {
   min-height: 18px;
   color: #1f4ce0;
-}
-
-@media (max-width: 960px) {
-  #calendar {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 720px) {
-  #calendar {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 460px) {
-  #calendar {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
