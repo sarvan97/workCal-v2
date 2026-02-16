@@ -67,32 +67,48 @@ async function refreshCalendar() {
   renderCalendar(logs, entryDateEl.value);
 }
 
-function classifyWorkoutType(log) {
-  const eventText = (log.parsed?.events || [])
-    .map((event) => `${event.title || ''} ${event.sourceText || ''}`)
-    .join(' ');
-  const text = `${eventText} ${log.raw_text || ''}`.toLowerCase();
+function classifyActivity(textInput) {
+  const text = String(textInput || '').toLowerCase();
 
   if (/strength|lift|squat|deadlift|bench|press|row/.test(text)) {
-    return { key: 'strength', badge: 'S' };
+    return { key: 'strength', badge: 'S', label: 'Strength' };
   }
-  if (/cardio|run|jog|hiit|interval/.test(text)) {
-    return { key: 'cardio', badge: 'C' };
+  if (/run|running|jog|cardio|hiit|interval/.test(text)) {
+    return { key: 'cardio', badge: 'R', label: 'Run/Cardio' };
   }
   if (/cycle|bike|cycling|biking|spin/.test(text)) {
-    return { key: 'cycle', badge: 'B' };
+    return { key: 'cycle', badge: 'B', label: 'Cycle' };
   }
   if (/mobility|yoga|stretch|recovery|foam\s*roll/.test(text)) {
-    return { key: 'mobility', badge: 'M' };
+    return { key: 'mobility', badge: 'M', label: 'Mobility' };
   }
   if (/walk|hike|walking|hiking/.test(text)) {
-    return { key: 'walk', badge: 'W' };
+    return { key: 'walk', badge: 'W', label: 'Walk/Hike' };
   }
   if (/workout|training|exercise|gym/.test(text)) {
-    return { key: 'workout', badge: 'W' };
+    return { key: 'workout', badge: 'W', label: 'Workout' };
   }
 
-  return { key: 'event', badge: '•' };
+  return { key: 'event', badge: '•', label: 'Event' };
+}
+
+function getActivityList(log) {
+  const events = log?.parsed?.events || [];
+
+  if (!events.length) {
+    const fallback = classifyActivity(log?.raw_text || '');
+    return [{ ...fallback, title: (log?.raw_text || 'Event').slice(0, 80) }];
+  }
+
+  return events.map((event) => {
+    const source = `${event.title || ''} ${event.sourceText || ''}`.trim();
+    const activity = classifyActivity(source);
+    return {
+      ...activity,
+      title: event.title || event.sourceText || 'Event',
+      time: event.startTime || '',
+    };
+  });
 }
 
 function renderCalendar(logsList, selectedDate) {
@@ -110,7 +126,6 @@ function renderCalendar(logsList, selectedDate) {
   for (let day = 1; day <= daysInMonth; day += 1) {
     const date = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const fullLog = logMap.get(date);
-    const eventCount = fullLog?.parsed?.events?.length || 0;
 
     const dayEl = document.createElement('div');
     dayEl.className = 'day';
@@ -131,18 +146,28 @@ function renderCalendar(logsList, selectedDate) {
     const daySubEl = dayEl.querySelector('.day-sub');
 
     if (fullLog) {
+      const activities = getActivityList(fullLog);
       dayEl.classList.add('has-log');
-      const workoutType = classifyWorkoutType(fullLog);
-      dayEl.classList.add(`type-${workoutType.key}`);
+      dayEl.classList.add(`type-${activities[0].key}`);
 
-      const badgeEl = document.createElement('div');
-      badgeEl.className = 'badge';
-      badgeEl.textContent = workoutType.badge;
-      dayBadgesEl.appendChild(badgeEl);
+      activities.forEach((activity) => {
+        const badgeEl = document.createElement('div');
+        badgeEl.className = `badge type-${activity.key}`;
+        badgeEl.textContent = activity.badge;
+        dayBadgesEl.appendChild(badgeEl);
+      });
 
-      daySubEl.textContent = eventCount === 1 ? '1 item' : `${eventCount} items`;
+      const uniqueActivities = activities.length;
+      daySubEl.textContent = uniqueActivities === 1 ? '1 item' : `${uniqueActivities} items`;
+
+      const detailLines = activities.map((a) => {
+        const timePrefix = a.time ? `${a.time} — ` : '';
+        return `${a.badge} ${timePrefix}${a.title}`;
+      });
+      dayEl.title = detailLines.join('\n');
     } else {
       daySubEl.textContent = '';
+      dayEl.title = 'No log yet. Click to add retrospectively.';
     }
 
     dayEl.addEventListener('click', () => {
@@ -152,7 +177,7 @@ function renderCalendar(logsList, selectedDate) {
         statusEl.textContent = fullLog.parsed?.summary || '';
       } else {
         logTextEl.value = '';
-        statusEl.textContent = '';
+        statusEl.textContent = `Selected ${date}. Add your retrospective activity and save.`;
       }
 
       renderCalendar(logs, date);

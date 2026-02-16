@@ -5,28 +5,34 @@
 
 body {
   margin: 0;
-  background: #f2f5fb;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255, 193, 94, 0.25), transparent 55%),
+    radial-gradient(900px 500px at 90% 0%, rgba(89, 171, 151, 0.22), transparent 55%),
+    linear-gradient(180deg, #f8f4e9 0%, #eef7f2 48%, #e6f1fb 100%);
   color: #1f2a44;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 24px;
 }
 
 header h1 {
   margin: 0;
+  color: #234f45;
 }
 
 header p {
-  color: #4d5c7d;
+  color: #4f665b;
 }
 
 .card {
-  background: white;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(147, 171, 160, 0.25);
   border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(28, 38, 66, 0.08);
+  box-shadow: 0 10px 24px rgba(38, 64, 57, 0.08);
+  backdrop-filter: blur(4px);
   padding: 16px;
   margin-top: 16px;
 }
@@ -40,7 +46,7 @@ header p {
 .tabs button,
 button {
   border: none;
-  background: #3d66f5;
+  background: #2e6b5f;
   color: white;
   border-radius: 8px;
   padding: 10px 12px;
@@ -49,13 +55,13 @@ button {
 }
 
 .tabs button.active {
-  background: #1f4ce0;
+  background: #204f46;
 }
 
 button.outline {
   background: transparent;
-  color: #1f4ce0;
-  border: 1px solid #1f4ce0;
+  color: #275a4f;
+  border: 1px solid #275a4f;
 }
 
 input,
@@ -65,7 +71,8 @@ textarea {
   margin: 8px 0 12px;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #cfd6ea;
+  border: 1px solid #c7dbd1;
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .hidden {
@@ -92,24 +99,24 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 92px;
+  min-height: 100px;
   padding: 10px;
-  border: 1px solid #d9e0ef;
-  border-radius: 10px;
-  background: #ffffff;
+  border: 1px solid #d4dfdc;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
   color: #1f2a44;
   cursor: pointer;
   transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
 }
 
 .day:hover {
-  transform: translateY(-1px);
-  border-color: #c7d2ea;
-  box-shadow: 0 6px 16px rgba(31, 42, 68, 0.08);
+  transform: translateY(-2px);
+  border-color: #b8cdc6;
+  box-shadow: 0 8px 16px rgba(42, 72, 62, 0.12);
 }
 
 .day.selected {
-  outline: 2px solid #3d66f5;
+  outline: 2px solid #2e6b5f;
   outline-offset: 1px;
 }
 
@@ -117,20 +124,23 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .day-num {
   font-size: 13px;
-  font-weight: 600;
-  color: #2e3d62;
+  font-weight: 700;
+  color: #2d3f39;
 }
 
 .day-badges {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 4px;
   margin-left: auto;
+  flex-wrap: wrap;
+  max-width: 70%;
 }
 
 .badge {
@@ -150,7 +160,7 @@ textarea {
 .day-sub {
   margin-top: auto;
   font-size: 12px;
-  color: #7a869f;
+  color: #6f7f88;
 }
 
 .day.type-strength {
@@ -158,17 +168,9 @@ textarea {
   border-color: #cdeed8;
 }
 
-.day.type-strength .badge {
-  background: #1f9d55;
-}
-
 .day.type-cardio {
   background: #fff1f1;
   border-color: #f4d0d0;
-}
-
-.day.type-cardio .badge {
-  background: #dc2626;
 }
 
 .day.type-cycle {
@@ -176,17 +178,9 @@ textarea {
   border-color: #cfe0ff;
 }
 
-.day.type-cycle .badge {
-  background: #2563eb;
-}
-
 .day.type-mobility {
   background: #f6f0ff;
   border-color: #e2d4ff;
-}
-
-.day.type-mobility .badge {
-  background: #7c3aed;
 }
 
 .day.type-walk {
@@ -194,17 +188,9 @@ textarea {
   border-color: #ffe3c2;
 }
 
-.day.type-walk .badge {
-  background: #ea580c;
-}
-
 .day.type-workout {
   background: #f5f6f8;
   border-color: #dee1e7;
-}
-
-.day.type-workout .badge {
-  background: #6b7280;
 }
 
 .day.type-event {
@@ -212,13 +198,37 @@ textarea {
   border-color: #e2e8f0;
 }
 
-.day.type-event .badge {
+.badge.type-strength {
+  background: #1f9d55;
+}
+
+.badge.type-cardio {
+  background: #16a34a;
+}
+
+.badge.type-cycle {
+  background: #2563eb;
+}
+
+.badge.type-mobility {
+  background: #7c3aed;
+}
+
+.badge.type-walk {
+  background: #ea580c;
+}
+
+.badge.type-workout {
+  background: #6b7280;
+}
+
+.badge.type-event {
   background: #1f2937;
 }
 
 #status {
   min-height: 18px;
-  color: #1f4ce0;
+  color: #205348;
 }
 
 @media (max-width: 960px) {
